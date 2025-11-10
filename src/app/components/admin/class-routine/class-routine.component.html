@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>College ERP - Class Routine</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#3b82f6',
+            secondary: '#1e40af',
+            accent: '#f59e0b',
+            light: '#f8fafc',
+            dark: '#1e293b'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .card-hover {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card-hover:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+
+    .sidebar-transition {
+      transition: all 0.3s ease;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-50 font-sans">
+  <!-- Header Section -->
+  <header class="bg-white shadow-sm">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+      <div class="flex items-center">
+        <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-white font-bold mr-3">CE</div>
+        <h1 class="text-xl font-bold text-dark">College ERP</h1>
+      </div>
+      <div class="flex items-center space-x-4">
+        <div class="hidden md:flex items-center space-x-2 text-gray-600">
+          <i class="fas fa-bell"></i>
+          <i class="fas fa-envelope"></i>
+          <i class="fas fa-user-circle text-xl"></i>
+        </div>
+        <button class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="container mx-auto px-4 py-6">
+    <!-- Dashboard Header -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+      <div>
+        <h1 class="text-2xl font-bold text-dark mb-2">Class Routine</h1>
+        <p class="text-gray-600">Fall Semester 2023 - Computer Science Department</p>
+      </div>
+      <div class="flex space-x-3 mt-4 md:mt-0">
+        <div class="bg-white rounded-lg shadow-sm px-4 py-2 flex items-center">
+          <i class="fas fa-calendar-alt text-primary mr-2"></i>
+          <span class="text-sm font-medium">Week: 12</span>
+        </div>
+        <button class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center">
+          <i class="fas fa-download mr-2"></i> Export
+        </button>
+      </div>
+    </div>
+
+    <!-- Filters and Controls -->
+    <div class="bg-white rounded-xl shadow-sm p-4 mb-6">
+      <div class="flex flex-col md:flex-row justify-between">
+        <div class="flex flex-wrap gap-3 mb-4 md:mb-0">
+          <select class="bg-light border-0 rounded-lg px-3 py-2 text-sm">
+            <option>All Departments</option>
+            <option>Computer Science</option>
+            <option>Electrical Engineering</option>
+            <option>Mechanical Engineering</option>
+          </select>
+          <select class="bg-light border-0 rounded-lg px-3 py-2 text-sm">
+            <option>All Semesters</option>
+            <option>Semester 1</option>
+            <option>Semester 3</option>
+            <option>Semester 5</option>
+            <option>Semester 7</option>
+          </select>
+          <select class="bg-light border-0 rounded-lg px-3 py-2 text-sm">
+            <option>All Sections</option>
+            <option>Section A</option>
+            <option>Section B</option>
+            <option>Section C</option>
+          </select>
+        </div>
+        <div class="flex items-center space-x-3">
+          <button class="bg-light text-dark px-3 py-2 rounded-lg text-sm font-medium">
+            <i class="fas fa-chevron-left mr-1"></i> Previous
+          </button>
+          <span class="text-sm font-medium">Nov 20 - Nov 26</span>
+          <button class="bg-light text-dark px-3 py-2 rounded-lg text-sm font-medium">
+            Next <i class="fas fa-chevron-right ml-1"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex flex-col lg:flex-row gap-6">
+      <!-- Class Routine Table -->
+      <div class="lg:w-3/4">
+        <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead class="bg-primary text-white">
+                <tr>
+                  <th class="p-4 text-left font-medium">Time</th>
+                  <th class="p-4 text-center font-medium">Monday</th>
+                  <th class="p-4 text-center font-medium">Tuesday</th>
+                  <th class="p-4 text-center font-medium">Wednesday</th>
+                  <th class="p-4 text-center font-medium">Thursday</th>
+                  <th class="p-4 text-center font-medium">Friday</th>
+                  <th class="p-4 text-center font-medium">Saturday</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- 8:00 - 9:00 -->
+                <tr class="border-b border-gray-100">
+                  <td class="p-4 text-sm font-medium text-gray-600">8:00 - 9:00</td>
+                  <td class="p-2">
+                    <div class="bg-blue-50 border-l-4 border-blue-500 rounded-r-lg p-3 m-2 shadow-sm card-hover">
+                      <div class="font-medium text-gray-800">Data Structures</div>
+                      <div class="text-sm text-gray-600 mt-1">Prof. Johnson</div>
+                      <div class="text-xs text-gray-500 mt-1 flex justify-between">
+                        <span>Room 101</span>
+                        <span>CS-A</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="p-2">
+                    <div class="bg-purple-50 border-l-4 border-purple-500 rounded-r-lg p-3 m-2 shadow-sm card-hover">
+                      <div class="font-medium text-gray-800">Operating Systems</div>
+                      <div class="text-sm text-gray-600 mt-1">Dr. Williams</div>
+                      <div class="text-xs text-gray-500 mt-1 flex justify-between">
+                        <span>Lab 201</span>
+                        <span>CS-B</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="p-2">
+                    <div class="bg-green-50 border-l-4 border-green-500 rounded-r-lg p-3 m-2 shadow-sm card-hover">
+                      <div class="font-medium text-gray-800">Algorithms</div>
+                      <div class="text-sm text-gray-600 mt-1">Prof. Davis</div>
+                      <div class="text-xs text-gray-500 mt-1 flex justify-between">
+                        <span>Room 105</span>
+                        <span>CS-A</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="p-2"></td>
+                  <td class="p-2">
+                    <div class="bg-yellow-50 border-l-4 border-yellow-500 rounded-r-lg p-3 m-2 shadow-sm card-hover">
+                      <div class="font-medium text-gray-800">Web Development</div>
+                      <div class="text-sm text-gray-600 mt-1">Dr. Anderson</div>
+                      <div class="text-xs text-gray-500 mt-1 flex justify-between">
+                        <span>Lab 203</span>
+                        <span>CS-B</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="p-2"></td>
+                </tr>
+
+                <!-- 9:00 - 10:00 -->
+                <tr class="border-b border-gray-100">
+                  <td class="p-4 text-sm font-medium text-gray-600">9:00 - 10:00</td>
+                  <td class="p-2">
+                    <div class="bg-purple-50 border-l-4 border-purple-500 rounded-r-lg p-3 m-2 shadow-sm card-hover">
+                      <div class="font-medium text-gray-800">Database Systems</div>
+                      <div class="text-sm text-gray-600 mt-1">Dr. Roberts</div>
+                      <div class="text-xs text-gray-500 mt-1 flex justify-between">
+                        <span>Room 102</span>
+                        <span>CS-A</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="p-2"></td>
+                  <td class="p-2">
+                    <div class="bg-blue-50 border-l-4 border-blue-500 rounded-r-lg p-3 m-2 shadow-sm card-hover">
+                      <div class="font-medium text-gray-800">Software Engineering</div>
+                      <div class="text-sm text-gray-600 mt-1">Prof. Miller</div>
+                      <div class="text-xs text-gray-500 mt-1 flex justify-between">
+                        <span>Room 103</span>
+                        <span>CS-A</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="p-2">
+                    <div class="bg-red-50 border-l-4 border-red-500 rounded-r-lg p-3 m-2 shadow-sm card-hover">
+                      <div class="font-medium text-gray-800">Computer Networks</div>
+                      <div class="text-sm text-gray-600 mt-1">Dr. Taylor</div>
+                      <div class="text-xs text-gray-500 mt-1 flex justify-between">
+                        <span>Lab 202</span>
+                        <span>CS-B</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="p-2"></td>
+                  <td class="p-2">
+                    <div class="bg-indigo-50 border-l-4 border-indigo-500 rounded-r-lg p-3 m-2 shadow-sm card-hover">
+                      <div class="font-medium text-gray-800">Mobile App Development</div>
+                      <div class="text-sm text-gray-600 mt-1">Prof. Wilson</div>
+                      <div class="text-xs text-gray-500 mt-1 flex justify-between">
+                        <span>Lab 205</span>
+                        <span>CS-A</span>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+
+                <!-- 10:00 - 11:00 -->
+                <tr class="border-b border-gray-100">
+                  <td class="p-4 text-sm font-medium text-gray-600">10:00 - 11:00</td>
+                  <td class="p-2"></td>
+                  <td class="p-2">
+                    <div class="bg-green-50 border-l-4 border-green-500 rounded-r-lg p-3 m-2 shadow-sm card-hover">
+                      <div class="font-medium text-gray-800">AI & Machine Learning</div>
+                      <div class="text-sm text-gray-600 mt-1">Dr. Brown</div>
+                      <div class="text-xs text-gray-500 mt-1 flex justify-between">
+                        <span>Room 104</span>
+                        <span>CS-B</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="p-2"></td>
+                  <td class="p-2">
+                    <div class="bg-yellow-50 border-l-4 border-yellow-500 rounded-r-lg p-3 m-2 shadow-sm card-hover">
+                      <div class="font-medium text-gray-800">Cyber Security</div>
+                      <div class="text-sm text-gray-600 mt-1">Prof. Moore</div>
+                      <div class="text-xs text-gray-500 mt-1 flex justify-between">
+                        <span>Lab 204</span>
+                        <span>CS-A</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="p-2">
+                    <div class="bg-blue-50 border-l-4 border-blue-500 rounded-r-lg p-3 m-2 shadow-sm card-hover">
+                      <div class="font-medium text-gray-800">Cloud Computing</div>
+                      <div class="text-sm text-gray-600 mt-1">Dr. Thomas</div>
+                      <div class="text-xs text-gray-500 mt-1 flex justify-between">
+                        <span>Room 106</span>
+                        <span>CS-B</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="p-2"></td>
+                </tr>
+
+                <!-- 11:00 - 12:00 -->
+                <tr class="border-b border-gray-100">
+                  <td class="p-4 text-sm font-medium text-gray-600">11:00 - 12:00</td>
+                  <td class="p-2">
+                    <div class="bg-red-50 border-l-4 border-red-500 rounded-r-lg p-3 m-2 shadow-sm card-hover">
+                      <div class="font-medium text-gray-800">Computer Architecture</div>
+                      <div class="text-sm text-gray-600 mt-1">Prof. Harris</div>
+                      <div class="text-xs text-gray-500 mt-1 flex justify-between">
+                        <span>Room 107</span>
+                        <span>CS-A</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="p-2"></td>
+                  <td class="p-2">
+                    <div class="bg-purple-50 border-l-4 border-purple-500 rounded-r-lg p-3 m-2 shadow-sm card-hover">
+                      <div class="font-medium text-gray-800">Data Mining</div>
+                      <div class="text-sm text-gray-600 mt-1">Dr. Martin</div>
+                      <div class="text-xs text-gray-500 mt-1 flex justify-between">
+                        <span>Lab 206</span>
+                        <span>CS-B</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="p-2"></td>
+                  <td class="p-2">
+                    <div class="bg-green-50 border-l-4 border-green-500 rounded-r-lg p-3 m-2 shadow-sm card-hover">
+                      <div class="font-medium text-gray-800">Software Testing</div>
+                      <div class="text-sm text-gray-600 mt-1">Prof. Lee</div>
+                      <div class="text-xs text-gray-500 mt-1 flex justify-between">
+                        <span>Room 108</span>
+                        <span>CS-A</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="p-2"></td>
+                </tr>
+
+                <!-- 12:00 - 1:00 -->
+                <tr class="border-b border-gray-100 bg-gray-50">
+                  <td class="p-4 text-sm font-medium text-gray-600">12:00 - 1:00</td>
+                  <td class="p-4 text-center text-gray-500" colspan="6">Lunch Break</td>
+                </tr>
+
+                <!-- 1:00 - 2:00 -->
+                <tr class="border-b border-gray-100">
+                  <td class="p-4 text-sm font-medium text-gray-600">1:00 - 2:00</td>
+                  <td class="p-2">
+                    <div class="bg-indigo-50 border-l-4 border-indigo-500 rounded-r-lg p-3 m-2 shadow-sm card-hover">
+                      <div class="font-medium text-gray-800">Web Technologies</div>
+                      <div class="text-sm text-gray-600 mt-1">Dr. Clark</div>
+                      <div class="text-xs text-gray-500 mt-1 flex justify-between">
+                        <span>Lab 207</span>
+                        <span>CS-B</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="p-2">
+                    <div class="bg-yellow-50 border-l-4 border-yellow-500 rounded-r-lg p-3 m-2 shadow-sm card-hover">
+                      <div class="font-medium text-gray-800">Python Programming</div>
+                      <div class="text-sm text-gray-600 mt-1">Prof. Lewis</div>
+                      <div class="text-xs text-gray-500 mt-1 flex justify-between">
+                        <span>Room 109</span>
+                        <span>CS-A</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="p-2"></td>
+                  <td class="p-2">
+                    <div class="bg-red-50 border-l-4 border-red-500 rounded-r-lg p-3 m-2 shadow-sm card-hover">
+                      <div class="font-medium text-gray-800">Big Data Analytics</div>
+                      <div class="text-sm text-gray-600 mt-1">Dr. Walker</div>
+                      <div class="text-xs text-gray-500 mt-1 flex justify-between">
+                        <span>Lab 208</span>
+                        <span>CS-B</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="p-2"></td>
+                  <td class="p-2">
+                    <div class="bg-blue-50 border-l-4 border-blue-500 rounded-r-lg p-3 m-2 shadow-sm card-hover">
+                      <div class="font-medium text-gray-800">IoT Fundamentals</div>
+                      <div class="text-sm text-gray-600 mt-1">Prof. Hall</div>
+                      <div class="text-xs text-gray-500 mt-1 flex justify-between">
+                        <span>Room 110</span>
+                        <span>CS-A</span>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+
+                <!-- 2:00 - 3:00 -->
+                <tr class="border-b border-gray-100">
+                  <td class="p-4 text-sm font-medium text-gray-600">2:00 - 3:00</td>
+                  <td class="p-2"></td>
+                  <td class="p-2">
+                    <div class="bg-purple-50 border-l-4 border-purple-500 rounded-r-lg p-3 m-2 shadow-sm card-hover">
+                      <div class="font-medium text-gray-800">Java Programming</div>
+                      <div class="text-sm text-gray-600 mt-1">Dr. Allen</div>
+                      <div class="text-xs text-gray-500 mt-1 flex justify-between">
+                        <span>Lab 209</span>
+                        <span>CS-A</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="p-2">
+                    <div class="bg-green-50 border-l-4 border-green-500 rounded-r-lg p-3 m-2 shadow-sm card-hover">
+                      <div class="font-medium text-gray-800">Compiler Design</div>
+                      <div class="text-sm text-gray-600 mt-1">Prof. Young</div>
+                      <div class="text-xs text-gray-500 mt-1 flex justify-between">
+                        <span>Room 111</span>
+                        <span>CS-B</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="p-2"></td>
+                  <td class="p-2">
+                    <div class="bg-yellow-50 border-l-4 border-yellow-500 rounded-r-lg p-3 m-2 shadow-sm card-hover">
+                      <div class="font-medium text-gray-800">Blockchain Technology</div>
+                      <div class="text-sm text-gray-600 mt-1">Dr. King</div>
+                      <div class="text-xs text-gray-500 mt-1 flex justify-between">
+                        <span>Lab 210</span>
+                        <span>CS-A</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="p-2"></td>
+                </tr>
+
+                <!-- 3:00 - 4:00 -->
+                <tr>
+                  <td class="p-4 text-sm font-medium text-gray-600">3:00 - 4:00</td>
+                  <td class="p-2">
+                    <div class="bg-red-50 border-l-4 border-red-500 rounded-r-lg p-3 m-2 shadow-sm card-hover">
+                      <div class="font-medium text-gray-800">Software Project Management</div>
+                      <div class="text-sm text-gray-600 mt-1">Prof. Scott</div>
+                      <div class="text-xs text-gray-500 mt-1 flex justify-between">
+                        <span>Room 112</span>
+                        <span>CS-B</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="p-2"></td>
+                  <td class="p-2">
+                    <div class="bg-indigo-50 border-l-4 border-indigo-500 rounded-r-lg p-3 m-2 shadow-sm card-hover">
+                      <div class="font-medium text-gray-800">Human Computer Interaction</div>
+                      <div class="text-sm text-gray-600 mt-1">Dr. Adams</div>
+                      <div class="text-xs text-gray-500 mt-1 flex justify-between">
+                        <span>Room 113</span>
+                        <span>CS-A</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="p-2">
+                    <div class="bg-blue-50 border-l-4 border-blue-500 rounded-r-lg p-3 m-2 shadow-sm card-hover">
+                      <div class="font-medium text-gray-800">Parallel Computing</div>
+                      <div class="text-sm text-gray-600 mt-1">Prof. Nelson</div>
+                      <div class="text-xs text-gray-500 mt-1 flex justify-between">
+                        <span>Lab 211</span>
+                        <span>CS-B</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="p-2"></td>
+                  <td class="p-2">
+                    <div class="bg-purple-50 border-l-4 border-purple-500 rounded-r-lg p-3 m-2 shadow-sm card-hover">
+                      <div class="font-medium text-gray-800">Computer Graphics</div>
+                      <div class="text-sm text-gray-600 mt-1">Dr. Carter</div>
+                      <div class="text-xs text-gray-500 mt-1 flex justify-between">
+                        <span>Lab 212</span>
+                        <span>CS-A</span>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar with Today's Classes -->
+      <div class="lg:w-1/4">
+        <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+          <h2 class="text-lg font-bold text-dark mb-4">Today's Classes</h2>
+          <div class="space-y-4">
+            <div class="border-l-4 border-green-500 bg-green-50 p-4 rounded-r-lg">
+              <div class="flex justify-between items-start">
+                <div>
+                  <h3 class="font-bold text-gray-800">Data Structures</h3>
+                  <p class="text-sm text-gray-600 mt-1">Prof. Johnson</p>
+                </div>
+                <span class="text-xs font-medium bg-green-100 text-green-800 px-2 py-1 rounded-full">Completed</span>
+              </div>
+              <div class="flex justify-between items-center mt-3 text-sm text-gray-500">
+                <span>8:00 - 9:00</span>
+                <span>Room 101</span>
+              </div>
+            </div>
+
+            <div class="border-l-4 border-blue-500 bg-blue-50 p-4 rounded-r-lg">
+              <div class="flex justify-between items-start">
+                <div>
+                  <h3 class="font-bold text-gray-800">Database Systems</h3>
+                  <p class="text-sm text-gray-600 mt-1">Dr. Roberts</p>
+                </div>
+                <span class="text-xs font-medium bg-blue-100 text-blue-800 px-2 py-1 rounded-full">Ongoing</span>
+              </div>
+              <div class="flex justify-between items-center mt-3 text-sm text-gray-500">
+                <span>9:00 - 10:00</span>
+                <span>Room 102</span>
+              </div>
+            </div>
+
+            <div class="border-l-4 border-yellow-500 bg-yellow-50 p-4 rounded-r-lg">
+              <div class="flex justify-between items-start">
+                <div>
+                  <h3 class="font-bold text-gray-800">Computer Architecture</h3>
+                  <p class="text-sm text-gray-600 mt-1">Prof. Harris</p>
+                </div>
+                <span class="text-xs font-medium bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">Upcoming</span>
+              </div>
+              <div class="flex justify-between items-center mt-3 text-sm text-gray-500">
+                <span>11:00 - 12:00</span>
+                <span>Room 107</span>
+              </div>
+            </div>
+
+            <div class="border-l-4 border-yellow-500 bg-yellow-50 p-4 rounded-r-lg">
+              <div class="flex justify-between items-start">
+                <div>
+                  <h3 class="font-bold text-gray-800">Web Technologies</h3>
+                  <p class="text-sm text-gray-600 mt-1">Dr. Clark</p>
+                </div>
+                <span class="text-xs font-medium bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">Upcoming</span>
+              </div>
+              <div class="flex justify-between items-center mt-3 text-sm text-gray-500">
+                <span>1:00 - 2:00</span>
+                <span>Lab 207</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm p-6">
+          <h2 class="text-lg font-bold text-dark mb-4">Quick Stats</h2>
+          <div class="space-y-4">
+            <div class="flex justify-between items-center">
+              <span class="text-gray-600">Total Classes This Week</span>
+              <span class="font-bold text-dark">24</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-gray-600">Completed Classes</span>
+              <span class="font-bold text-green-600">8</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-gray-600">Upcoming Classes</span>
+              <span class="font-bold text-yellow-600">16</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-gray-600">Different Subjects</span>
+              <span class="font-bold text-primary">14</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

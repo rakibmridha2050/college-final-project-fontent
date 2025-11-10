@@ -28,9 +28,13 @@ import { ScheduleClassListComponent } from './components/admin/schedule-class-li
 import { AttendanceListComponent } from './components/admin/attendance-list/attendance-list.component';
 import { AttendanceComponent } from './components/admin/attendance/attendance.component';
 import { FeeStructureComponent } from './components/admin/fee-structure/fee-structure.component';
-import { FeeStructureFormComponent } from './components/admin/fee-structure-form/fee-structure-form.component';
+
 import { PaymentListComponent } from './components/admin/payment-list/payment-list.component';
 import { StudentFeeListComponent } from './components/admin/student-fee-list/student-fee-list.component';
+import { ClassRoutineComponent } from './components/admin/class-routine/class-routine.component';
+import { TeacherDashboardComponent } from './components/teacher-dashboard/teacher-dashboard.component';
+import { StudentDashboardComponent } from './components/student-dashboard/student-dashboard.component';
+import { PaymentDashboardComponent } from './components/payment-dashboard/payment-dashboard.component';
 
 const routes: Routes = [
 
@@ -95,8 +99,8 @@ const routes: Routes = [
       // payment routing
 
       { path: 'payment/fee-structures', component: FeeStructureComponent },
-      { path: 'payment/fee-structures/create', component: FeeStructureFormComponent },
-      { path: 'payment/fee-structures/edit/:id', component: FeeStructureFormComponent },
+
+
       { path: 'payment/student-fees', component: StudentFeeListComponent },
       { path: 'payment/payments', component: PaymentListComponent },
 
@@ -114,6 +118,18 @@ const routes: Routes = [
       { path: 'sections', component: SectionListComponent },
       { path: 'sections/create', component: SectionFormComponent },
       { path: 'sections/edit/:id', component: SectionFormComponent },
+
+
+
+      // edit hobe 
+
+
+      { path: 'class-routine', component: ClassRoutineComponent },
+      { path: 'teacher-admin', component: TeacherDashboardComponent },
+      { path: 'student-admin', component: StudentDashboardComponent },
+      { path: 'payment', component: PaymentDashboardComponent },
+
+
 
       { path: '', redirectTo: 'dashbord', pathMatch: 'full' }
 

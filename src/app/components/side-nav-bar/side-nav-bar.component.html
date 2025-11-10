@@ -18,8 +18,8 @@
       </button>
       <ul class="hidden group-hover:block pl-6 mt-1 space-y-1">
         <li routerLink="/admin/dashbord" class="px-2 py-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded">Admin Dashboard</li>
-        <li class="px-2 py-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded">Teacher Dashboard</li>
-        <li class="px-2 py-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded">Student Dashboard</li>
+        <li routerLink="teacher-admin" class="px-2 py-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded">Teacher Dashboard</li>
+        <li routerLink="student-admin" class="px-2 py-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded">Student Dashboard</li>
       </ul>
     </div>
 
@@ -76,7 +76,7 @@
         <li routerLink="notices" class="px-2 py-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded">Notices</li>
 
         <li routerLink="schedule-classes" class="px-2 py-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded">Schedule</li>
-        <li class="px-2 py-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded">Class Routine</li>
+        <li routerLink="class-routine" class="px-2 py-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded">Class Routine</li>
 
 
         <li routerLink="sections" class="px-2 py-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded">Section</li>
@@ -102,7 +102,11 @@
       </svg>
     </button>
     <ul class="hidden group-hover:block pl-6 mt-1 space-y-1">
-      <li routerLink="payment/fee-structures" class="px-2 py-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded">fee create</li>
+      <!-- <li routerLink="payment/fee-structures" class="px-2 py-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded">fee create</li> -->
+
+      <li routerLink="payment" class="px-2 py-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded">Payment
+      </li>
+
       
   
     </ul>

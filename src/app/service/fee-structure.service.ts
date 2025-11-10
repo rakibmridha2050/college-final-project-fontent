@@ -1,34 +1,30 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { FeeStructure } from '../model/payment.models';
+import { FeeStructure, Payment } from '../model/payment.models';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class FeeStructureService {
-  private apiUrl = 'http://localhost:8080/api/fee-structures';
+  private baseUrl = 'http://localhost:8080/api/payments';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-  getAllFeeStructures(): Observable<FeeStructure[]> {
-    return this.http.get<FeeStructure[]>(this.apiUrl);
+  createPayment(payment: Payment): Observable<Payment> {
+    return this.http.post<Payment>(this.baseUrl, payment);
   }
 
-  getFeeStructureById(id: number): Observable<FeeStructure> {
-    return this.http.get<FeeStructure>(`${this.apiUrl}/${id}`);
+  getAllPayments(): Observable<Payment[]> {
+    return this.http.get<Payment[]>(this.baseUrl);
   }
 
-  createFeeStructure(feeStructure: FeeStructure): Observable<FeeStructure> {
-    return this.http.post<FeeStructure>(this.apiUrl, feeStructure);
+  getPaymentsByStudent(studentId: number): Observable<Payment[]> {
+    return this.http.get<Payment[]>(`${this.baseUrl}/student/${studentId}`);
   }
 
-  updateFeeStructure(id: number, feeStructure: FeeStructure): Observable<FeeStructure> {
-    return this.http.put<FeeStructure>(`${this.apiUrl}/${id}`, feeStructure);
-  }
-
-  deleteFeeStructure(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  deletePayment(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
 }

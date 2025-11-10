@@ -1,0 +1,425 @@
+<div class="flex h-screen bg-gray-50">
+  <!-- Sidebar -->
+  <div [class]="sidebarOpen ? 'w-64' : 'w-20'" class="bg-white shadow-lg transition-all duration-300">
+    <div class="p-4 border-b">
+      <div class="flex items-center justify-between">
+        <h2 *ngIf="sidebarOpen" class="text-xl font-bold text-gray-800">Student Portal</h2>
+        <button (click)="toggleSidebar()" class="p-2 rounded-lg hover:bg-gray-100">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Student Profile -->
+    <div *ngIf="sidebarOpen" class="p-4 border-b">
+      <div class="flex items-center space-x-3">
+        <img class="w-12 h-12 rounded-full" src="data:image/jpeg;base64,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" alt="Student">
+        <div>
+          <h3 class="font-semibold text-gray-800">{{ studentInfo.name }}</h3>
+          <p class="text-sm text-gray-600">{{ studentInfo.studentId }}</p>
+        </div>
+      </div>
+      <div class="mt-3 text-xs text-gray-600">
+        <p>{{ studentInfo.major }}</p>
+        <p>GPA: <span [class]="getGradeColor(studentInfo.gpa.toString())"
+            class="px-2 py-1 rounded-full font-semibold">{{ studentInfo.gpa }}</span></p>
+      </div>
+    </div>
+
+    <nav class="mt-6">
+      <a (click)="setView('dashboard')"
+        [class]="currentView === 'dashboard' ? 'bg-blue-50 text-blue-600 border-r-4 border-blue-600' : 'text-gray-600 hover:bg-gray-50'"
+        class="flex items-center px-4 py-3 cursor-pointer transition-colors duration-200">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
+          </path>
+        </svg>
+        <span *ngIf="sidebarOpen" class="ml-3">Dashboard</span>
+      </a>
+
+      <a (click)="setView('courses')"
+        [class]="currentView === 'courses' ? 'bg-blue-50 text-blue-600 border-r-4 border-blue-600' : 'text-gray-600 hover:bg-gray-50'"
+        class="flex items-center px-4 py-3 cursor-pointer transition-colors duration-200">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253">
+          </path>
+        </svg>
+        <span *ngIf="sidebarOpen" class="ml-3">My Courses</span>
+      </a>
+
+      <a (click)="setView('assignments')"
+        [class]="currentView === 'assignments' ? 'bg-blue-50 text-blue-600 border-r-4 border-blue-600' : 'text-gray-600 hover:bg-gray-50'"
+        class="flex items-center px-4 py-3 cursor-pointer transition-colors duration-200">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+          </path>
+        </svg>
+        <span *ngIf="sidebarOpen" class="ml-3">Assignments</span>
+      </a>
+
+      <a (click)="setView('grades')"
+        [class]="currentView === 'grades' ? 'bg-blue-50 text-blue-600 border-r-4 border-blue-600' : 'text-gray-600 hover:bg-gray-50'"
+        class="flex items-center px-4 py-3 cursor-pointer transition-colors duration-200">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <span *ngIf="sidebarOpen" class="ml-3">Grades</span>
+      </a>
+
+      <a (click)="setView('schedule')"
+        [class]="currentView === 'schedule' ? 'bg-blue-50 text-blue-600 border-r-4 border-blue-600' : 'text-gray-600 hover:bg-gray-50'"
+        class="flex items-center px-4 py-3 cursor-pointer transition-colors duration-200">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+        </svg>
+        <span *ngIf="sidebarOpen" class="ml-3">Schedule</span>
+      </a>
+    </nav>
+  </div>
+
+  <!-- Main Content -->
+  <div class="flex-1 overflow-auto">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b">
+      <div class="flex items-center justify-between px-6 py-4">
+        <h1 class="text-2xl font-semibold text-gray-800 capitalize">{{ currentView }}</h1>
+        <div class="flex items-center space-x-4">
+          <div class="relative">
+            <input type="text" placeholder="Search..."
+              class="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            <svg class="w-5 h-5 text-gray-400 absolute left-3 top-2.5" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+          </div>
+          <button class="p-2 text-gray-400 hover:text-gray-600 relative">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
+              </path>
+            </svg>
+            <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Dashboard Content -->
+    <main class="p-6">
+      <!-- Dashboard View -->
+      <div *ngIf="currentView === 'dashboard'">
+        <!-- Welcome Section -->
+        <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg shadow-lg text-white p-6 mb-6">
+          <h2 class="text-2xl font-bold mb-2">Welcome back, {{ studentInfo.name }}! 👋</h2>
+          <p class="opacity-90">You have
+            4
+             <!-- {{ assignments.filter(a => a.status === 'pending').length }} -->
+             
+             
+             pending
+            assignments. Keep up the good work!</p>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center">
+              <div class="p-3 rounded-full bg-blue-100 text-blue-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253">
+                  </path>
+                </svg>
+              </div>
+              <div class="ml-4">
+                <h3 class="text-sm font-medium text-gray-600">Enrolled Courses</h3>
+                <p class="text-2xl font-semibold text-gray-900">{{ courses.length }}</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center">
+              <div class="p-3 rounded-full bg-green-100 text-green-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+              <div class="ml-4">
+                <h3 class="text-sm font-medium text-gray-600">Completed Assignments</h3>
+                <p class="text-2xl font-semibold text-gray-900">
+                  
+                  <!-- {{ assignments.filter(a => a.status ===
+                  'completed').length }} -->
+                  
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center">
+              <div class="p-3 rounded-full bg-orange-100 text-orange-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+              <div class="ml-4">
+                <h3 class="text-sm font-medium text-gray-600">Pending Assignments</h3>
+                <p class="text-2xl font-semibold text-gray-900">
+
+                  <!-- {{ assignments.filter(a => a.status ===
+                  'pending').length }} -->
+                  
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center">
+              <div class="p-3 rounded-full bg-purple-100 text-purple-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path>
+                </svg>
+              </div>
+              <div class="ml-4">
+                <h3 class="text-sm font-medium text-gray-600">Current GPA</h3>
+                <p class="text-2xl font-semibold text-gray-900">{{ studentInfo.gpa }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Upcoming Assignments -->
+          <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Upcoming Assignments</h3>
+            <div class="space-y-4">
+              <div *ngFor="let assignment of assignments.slice(0, 3)"
+                class="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50">
+                <div>
+                  <h4 class="font-medium text-gray-800">{{ assignment.title }}</h4>
+                  <p class="text-sm text-gray-600">{{ assignment.course }}</p>
+                </div>
+                <div class="text-right">
+                  <span class="text-sm font-medium text-gray-700">{{ getDaysUntil(assignment.dueDate) }} days</span>
+                  <span [class]="getStatusColor(assignment.status)" class="ml-2 px-2 py-1 text-xs rounded-full">
+                    {{ assignment.status }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Today's Schedule -->
+          <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Today's Schedule</h3>
+            <div class="space-y-3">
+              <div *ngFor="let event of schedule" class="flex items-center justify-between p-3 border rounded-lg">
+                <div class="flex items-center space-x-3">
+                  <div [ngClass]="{
+                    'bg-blue-100 text-blue-600': event.type === 'lecture',
+                    'bg-green-100 text-green-600': event.type === 'lab',
+                    'bg-orange-100 text-orange-600': event.type === 'assignment',
+                    'bg-red-100 text-red-600': event.type === 'exam'
+                  }" class="p-2 rounded-lg">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path *ngIf="event.type === 'lecture'" stroke-linecap="round" stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253">
+                      </path>
+                      <path *ngIf="event.type === 'lab'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
+                      </path>
+                    </svg>
+                  </div>
+                  <div>
+                    <h4 class="font-medium text-gray-800">{{ event.course }}</h4>
+                    <p class="text-sm text-gray-600">{{ event.location }}</p>
+                  </div>
+                </div>
+                <span class="text-sm font-medium text-gray-700">{{ event.time }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Courses View -->
+      <div *ngIf="currentView === 'courses'">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div *ngFor="let course of courses"
+            class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow duration-300">
+            <div [class]="course.color + ' h-32 rounded-t-lg flex items-center justify-center'">
+              <h3 class="text-xl font-bold text-white">{{ course.name }}</h3>
+            </div>
+            <div class="p-6">
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-sm text-gray-600">Instructor</span>
+                <span class="text-sm font-medium text-gray-900">{{ course.instructor }}</span>
+              </div>
+              <div class="flex justify-between items-center mb-4">
+                <span class="text-sm text-gray-600">Current Grade</span>
+                <span *ngIf="course.grade" [class]="getGradeColor(course.grade)"
+                  class="px-2 py-1 text-xs rounded-full font-semibold">
+                  {{ course.grade }}
+                </span>
+              </div>
+              <div class="mb-4">
+                <div class="flex justify-between text-sm mb-1">
+                  <span class="text-gray-600">Progress</span>
+                  <span class="font-medium text-gray-900">{{ course.progress }}%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                  <div [class]="course.color" class="h-2 rounded-full transition-all duration-500"
+                    [style.width.%]="course.progress"></div>
+                </div>
+              </div>
+              <div class="text-xs text-gray-600 mb-4">
+                <p>Next: {{ course.nextAssignment }}</p>
+                <p>Due: {{ course.dueDate }}</p>
+              </div>
+              <button
+                class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-200">
+                Enter Course
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Assignments View -->
+      <div *ngIf="currentView === 'assignments'">
+        <div class="bg-white rounded-lg shadow">
+          <div class="px-6 py-4 border-b">
+            <h3 class="text-lg font-semibold text-gray-800">All Assignments</h3>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Assignment
+                  </th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Course</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Due Date
+                  </th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Priority
+                  </th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr *ngFor="let assignment of assignments" class="hover:bg-gray-50">
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm font-medium text-gray-900">{{ assignment.title }}</div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ assignment.course }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ assignment.dueDate }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span [class]="getStatusColor(assignment.status)"
+                      class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
+                      {{ assignment.status }}
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span [class]="getPriorityColor(assignment.priority)"
+                      class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
+                      {{ assignment.priority }}
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <button *ngIf="!assignment.submitted" class="text-blue-600 hover:text-blue-900">Submit</button>
+                    <span *ngIf="assignment.submitted" class="text-green-600">Submitted</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grades View -->
+      <div *ngIf="currentView === 'grades'">
+        <div class="bg-white rounded-lg shadow">
+          <div class="px-6 py-4 border-b">
+            <h3 class="text-lg font-semibold text-gray-800">Grade Report</h3>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Course</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Assignment
+                  </th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Score</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Percentage
+                  </th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Feedback
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr *ngFor="let grade of grades" class="hover:bg-gray-50">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ grade.course }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ grade.assignment }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ grade.score }}/{{ grade.maxScore }}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span [class]="{
+                      'bg-green-100 text-green-800': grade.percentage >= 90,
+                      'bg-blue-100 text-blue-800': grade.percentage >= 80 && grade.percentage < 90,
+                      'bg-yellow-100 text-yellow-800': grade.percentage >= 70 && grade.percentage < 80,
+                      'bg-red-100 text-red-800': grade.percentage < 70
+                    }" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
+                      {{ grade.percentage }}%
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 text-sm text-gray-500">{{ grade.feedback }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Schedule View -->
+      <div *ngIf="currentView === 'schedule'">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Weekly Schedule -->
+          <div class="lg:col-span-2 bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Weekly Schedule</h3>
+            <div class="space-y-4">
+              <div *ngFor="let event of schedule"
+                class="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
+                <div class="flex items-center space-x-4">
+                  <div [ngClass]="{
+                    'bg-blue-100 text-blue-600': event.type === 'lecture',
+                    'bg-green-100 text-green-600': event.type === 'lab',
+                    'bg-orange-100 text-orange-600': event.type === 'assignment',
+                    'bg-red-100 text-red-600': event.type === 'exam'
+                  }" class="p-3 rounded-lg">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                  </div>
+                  <div>
+                    <h4 class="font-semibold text-gray-800">{{ event.course }}</h4>
+                    <p class="text-sm text-gray-600">{{ event.type }} • {{ event.location }}</p>
+                  </div>
+                </div>

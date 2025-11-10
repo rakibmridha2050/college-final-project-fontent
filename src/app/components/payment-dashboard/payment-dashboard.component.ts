@@ -1,14 +1,17 @@
-import { Component, OnInit } from '@angular/core';
-import { FeeStructure, Payment } from 'src/app/model/payment.models';
+import { Component } from '@angular/core';
+import { Payment } from 'src/app/model/payment.models';
 import { FeeStructureService } from 'src/app/service/fee-structure.service';
 
+
 @Component({
-  selector: 'app-fee-structure',
-  templateUrl: './fee-structure.component.html',
-  styleUrls: ['./fee-structure.component.scss']
+  selector: 'app-payment-dashboard',
+  templateUrl: './payment-dashboard.component.html',
+  styleUrls: ['./payment-dashboard.component.scss']
 })
-export class FeeStructureComponent implements OnInit {
-  payments: Payment[] = [];
+export class PaymentDashboardComponent {
+
+   showForm = false;
+ payments: Payment[] = [];
   newPayment: Payment = {
     studentId: 0,
     amount: 0,
@@ -68,5 +71,27 @@ export class FeeStructureComponent implements OnInit {
       },
       error: (err) => console.error(err)
     });
+  }
+
+    getPaymentsByStudent(studentId: number): void {
+    if (!studentId) {
+      alert('Please enter a valid Student ID.');
+      return;
+    }
+    this.loading = true;
+    this.paymentService.getPaymentsByStudent(studentId).subscribe({
+      next: (data) => {
+        this.payments = data;
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Error fetching student payments', err);
+        this.loading = false;
+      }
+    });
+    }
+  
+    toggleForm(): void {
+    this.showForm = !this.showForm;
   }
 }

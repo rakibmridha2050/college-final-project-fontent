@@ -40,9 +40,14 @@ import { AttendanceListComponent } from './components/admin/attendance-list/atte
 
 import { AttendanceComponent } from './components/admin/attendance/attendance.component';
 import { FeeStructureComponent } from './components/admin/fee-structure/fee-structure.component';
-import { FeeStructureFormComponent } from './components/admin/fee-structure-form/fee-structure-form.component';
+
 import { StudentFeeListComponent } from './components/admin/student-fee-list/student-fee-list.component';
 import { PaymentListComponent } from './components/admin/payment-list/payment-list.component';
+import { ClassRoutineComponent } from './components/admin/class-routine/class-routine.component';
+import { AttendanceAllListComponent } from './components/admin/attendance-all-list/attendance-all-list.component';
+import { TeacherDashboardComponent } from './components/teacher-dashboard/teacher-dashboard.component';
+import { StudentDashboardComponent } from './components/student-dashboard/student-dashboard.component';
+import { PaymentDashboardComponent } from './components/payment-dashboard/payment-dashboard.component';
 
 @NgModule({
   declarations: [
@@ -82,9 +87,14 @@ import { PaymentListComponent } from './components/admin/payment-list/payment-li
     
     AttendanceComponent,
           FeeStructureComponent,
-          FeeStructureFormComponent,
+       
           StudentFeeListComponent,
-          PaymentListComponent
+          PaymentListComponent,
+          ClassRoutineComponent,
+          AttendanceAllListComponent,
+          TeacherDashboardComponent,
+          StudentDashboardComponent,
+          PaymentDashboardComponent
   ],
   imports: [
     BrowserModule,

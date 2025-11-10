@@ -69,3 +69,14 @@ export interface FeeStatus {
   value: string;
   viewValue: string;
 }
+
+export interface Payment {
+  id?: number;
+  studentId: number;
+  amount: number;
+  paymentMode: string;
+  status?: string;
+  paymentDate?: string;
+  receiptNo?: string;
+  remarks?: string;
+}
