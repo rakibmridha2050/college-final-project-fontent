@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Payment } from 'src/app/model/payment.models';
 import { FeeStructureService } from 'src/app/service/fee-structure.service';
+import { ReportService } from 'src/app/service/report.service';
 
 
 @Component({
@@ -9,6 +10,9 @@ import { FeeStructureService } from 'src/app/service/fee-structure.service';
   styleUrls: ['./payment-dashboard.component.scss']
 })
 export class PaymentDashboardComponent {
+printReceipt(arg0: any) {
+throw new Error('Method not implemented.');
+}
 
    showForm = false;
  payments: Payment[] = [];
@@ -22,7 +26,7 @@ export class PaymentDashboardComponent {
   loading = false;
   errorMessage = '';
 
-  constructor(private paymentService: FeeStructureService) {}
+  constructor(private paymentService: FeeStructureService , private reportService:ReportService) {}
 
   ngOnInit(): void {
     this.loadPayments();
@@ -94,4 +98,34 @@ export class PaymentDashboardComponent {
     toggleForm(): void {
     this.showForm = !this.showForm;
   }
+
+    downloadAll(format: string): void {
+    this.reportService.downloadPaymentsReport(format).subscribe({
+      next: (data: Blob) => this.downloadFile(data, `payments_report.${format}`),
+      error: (err) => console.error('Error downloading report:', err)
+    });
+  }
+
+  // ✅ Download single payslip by paymentId
+  downloadPayslip(paymentId: number, format: string): void {
+    this.reportService.downloadPayslip(paymentId, format).subscribe({
+      next: (data: Blob) => this.downloadFile(data, `payslip_${paymentId}.${format}`),
+      error: (err) => console.error('Error downloading payslip:', err)
+    });
+  }
+
+  // Helper to trigger file download
+  private downloadFile(data: Blob, filename: string): void {
+    const url = window.URL.createObjectURL(data);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    window.URL.revokeObjectURL(url);
+  }
+
+
+
+
+
 }

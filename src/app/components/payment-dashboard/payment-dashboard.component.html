@@ -74,6 +74,24 @@
           <td class="p-2 border-b">{{ p.status }}</td>
           <td class="p-2 border-b">
             <button (click)="deletePayment(p.id)" class="text-red-600 hover:underline">Delete</button>
+                            <!-- <button (click)="downloadPayslip(p.id!, 'PDF')" class="text-gray-600 mx-4 hover:text-gray-900 p-1 rounded transition-colors"
+                              title="Print Receipt">
+                              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z">
+                                </path>
+                              </svg>
+                            </button> -->
+                            <button (click)="downloadPayslip(p.id!, 'PDF')" class="text-gray-600 hover:text-gray-900 mx-4 p-1 rounded transition-colors"
+                              title="Download Payslip">
+                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                class="w-5 h-5">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4" />
+                              </svg>
+                            </button>
+
+
           </td>
         </tr>
       </tbody>

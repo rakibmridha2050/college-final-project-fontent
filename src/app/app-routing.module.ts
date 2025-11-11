@@ -51,6 +51,7 @@ const routes: Routes = [
     path: 'admin', component: AdminDashbordComponent,
     children: [
       { path: 'dashbord', component: DashbordComponent },
+      { path: 'paylist', component: PaymentListComponent },
 
 
       // Student Routes
