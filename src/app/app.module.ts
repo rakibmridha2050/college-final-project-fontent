@@ -48,6 +48,10 @@ import { AttendanceAllListComponent } from './components/admin/attendance-all-li
 import { TeacherDashboardComponent } from './components/teacher-dashboard/teacher-dashboard.component';
 import { StudentDashboardComponent } from './components/student-dashboard/student-dashboard.component';
 import { PaymentDashboardComponent } from './components/payment-dashboard/payment-dashboard.component';
+import { ExamListComponent } from './components/admin/exam-list/exam-list.component';
+import { ExamCreateComponent } from './components/admin/exam-create/exam-create.component';
+import { ExamResultsComponent } from './components/admin/exam-results/exam-results.component';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -94,12 +98,16 @@ import { PaymentDashboardComponent } from './components/payment-dashboard/paymen
           AttendanceAllListComponent,
           TeacherDashboardComponent,
           StudentDashboardComponent,
-          PaymentDashboardComponent
+          PaymentDashboardComponent,
+          ExamListComponent,
+          ExamCreateComponent,
+          ExamResultsComponent
   ],
   imports: [
     BrowserModule,
+    CommonModule,
     AppRoutingModule,
-     BrowserAnimationsModule,
+    BrowserAnimationsModule,
     HttpClientModule,
     ReactiveFormsModule,
     FormsModule

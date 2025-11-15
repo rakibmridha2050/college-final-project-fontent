@@ -1,0 +1,98 @@
+<div class="container mx-auto px-4 py-8">
+  <!-- Header -->
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-gray-900">My Exams</h1>
+    <button routerLink="/admin/exams/create"
+      class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+      Create New Exam
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="flex justify-center items-center py-12">
+    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+    {{ error }}
+  </div>
+
+  <!-- Exams Grid -->
+  <div *ngIf="!loading && exams.length > 0" class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+    <div *ngFor="let exam of exams"
+      class="bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow">
+      <div class="p-6">
+        <!-- Exam Header -->
+        <div class="flex justify-between items-start mb-3">
+          <h3 class="text-xl font-semibold text-gray-900 truncate">{{ exam.examTitle }}</h3>
+          <span [class]="getStatusBadgeClass(exam.isPublished) + ' px-2 py-1 rounded-full text-xs font-medium'">
+            {{ exam.isPublished ? 'Published' : 'Draft' }}
+          </span>
+        </div>
+
+        <!-- Exam Details -->
+        <div class="space-y-2 mb-4">
+          <div class="flex items-center text-sm text-gray-600">
+            <span class="font-medium">Course:</span>
+            <span class="ml-2">{{ exam.courseName }}</span>
+          </div>
+          <div class="flex items-center text-sm text-gray-600">
+            <span class="font-medium">Date:</span>
+            <span class="ml-2">{{ exam.examDate | date:'medium' }}</span>
+          </div>
+          <div class="flex items-center text-sm text-gray-600">
+            <span class="font-medium">Duration:</span>
+            <span class="ml-2">{{ exam.duration }} minutes</span>
+          </div>
+          <div class="flex items-center text-sm text-gray-600">
+            <span class="font-medium">Total Marks:</span>
+            <span class="ml-2">{{ exam.totalMarks }}</span>
+          </div>
+        </div>
+
+        <!-- Exam Type -->
+        <div class="mb-4">
+          <span [class]="getTypeBadgeClass(exam.examType) + ' px-3 py-1 rounded-full text-sm font-medium'">
+            {{ exam.examType }}
+          </span>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex space-x-2">
+          <button [routerLink]="['/admin/exams', exam.id, 'results']"
+            class="flex-1 bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded text-sm font-medium transition-colors">
+            Results
+          </button>
+          <button *ngIf="!exam.isPublished" (click)="publishExam(exam.id)"
+            class="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded text-sm font-medium transition-colors">
+            Publish
+          </button>
+          <button [routerLink]="['/admin/exams', exam.id, 'edit']"
+            class="flex-1 bg-gray-600 hover:bg-gray-700 text-white px-3 py-2 rounded text-sm font-medium transition-colors">
+            Edit
+          </button>
+          <button (click)="deleteExam(exam.id)"
+            class="flex-1 bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded text-sm font-medium transition-colors">
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && exams.length === 0" class="text-center py-12">
+    <div class="text-gray-500 mb-4">
+      <svg class="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z" />
+      </svg>
+    </div>
+    <h3 class="text-lg font-medium text-gray-900 mb-2">No exams found</h3>
+    <p class="text-gray-500 mb-4">Get started by creating your first exam.</p>
+    <button routerLink="/exams/create"
+      class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+      Create Exam
+    </button>
+  </div>
+</div>
