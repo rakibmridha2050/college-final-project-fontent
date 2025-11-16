@@ -1,196 +1,397 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { debounceTime, distinctUntilChanged, Subscription } from 'rxjs';
 import { AttendanceStatus } from 'src/app/model/attendance-status.enum';
-import { AttendanceRequestDTO } from 'src/app/model/attendance.model';
+import { AttendanceFilter, BulkAttendanceRequest, Class, Course, Department, Section, StudentAttendance } from 'src/app/model/attendance.models';
 
-import { Classes } from 'src/app/model/classes.model';
-import { Course } from 'src/app/model/course.model';
-import { Department } from 'src/app/model/department.model';
-import { Section } from 'src/app/model/section.model';
-import { Student } from 'src/app/model/student.model';
 import { AttendanceService } from 'src/app/service/attendance.service';
-import { ClassesServiceService } from 'src/app/service/classes-service.service';
-import { CourseService } from 'src/app/service/course.service';
-import { DepartmentService } from 'src/app/service/department.service';
-import { SectionService } from 'src/app/service/section.service';
-import { StudentService } from 'src/app/service/student.service';
 
 @Component({
   selector: 'app-attendance',
   templateUrl: './attendance.component.html',
   styleUrls: ['./attendance.component.scss']
 })
-export class AttendanceComponent {
-  
+export class AttendanceComponent implements OnInit, OnDestroy {
+  attendanceForm: FormGroup;
+  currentStep = 1;
+  totalSteps = 6;
+
+  // Data arrays
   departments: Department[] = [];
-  classes: Classes[] = [];
+  classes: Class[] = [];
   sections: Section[] = [];
-  students: Student[] = [];
   courses: Course[] = [];
+  students: StudentAttendance[] = [];
 
-  selectedDepartmentId: number | null = null;
-  selectedClassId: number | null = null;
-  selectedSectionId: number | null = null;
-  selectedCourseId: number | null = null;
-
-  selectedDate: string = new Date().toISOString().split('T')[0];
-  periodNumber: number = 1;
-
+  // Loading states
   loading = false;
-  successMessage = '';
-  errorMessage = '';
+  loadingClasses = false;
+  loadingSections = false;
+  loadingCourses = false;
+  loadingStudents = false;
 
-  AttendanceStatus = AttendanceStatus;
+  // Status options
+  statusOptions = Object.values(AttendanceStatus);
+
+  // Subscription management
+  private formSubscriptions: Subscription[] = [];
 
   constructor(
-    private departmentService: DepartmentService,
-    private classService: ClassesServiceService,
-    private sectionService: SectionService,
-    private studentService: StudentService,
-    private attendanceService: AttendanceService,
-    private courseService: CourseService
-  ) {}
-
-  ngOnInit(): void {
-    this.loadDepartments();
-    this.loadCourses();
+    private fb: FormBuilder,
+    private attendanceService: AttendanceService
+  ) {
+    this.attendanceForm = this.createForm();
   }
 
-  loadCourses() {
-    this.courseService.getAllCourses().subscribe({
-      next: (courses) => this.courses = courses,
-      error: () => this.errorMessage = "Failed to load courses"
+  ngOnInit() {
+    this.loadDepartments();
+    // Delay form listeners setup until after initial data load
+    setTimeout(() => {
+      this.setupFormListeners();
+    }, 100);
+  }
+
+  ngOnDestroy() {
+    // Clean up subscriptions to prevent memory leaks
+    this.formSubscriptions.forEach(sub => sub.unsubscribe());
+  }
+
+  createForm(): FormGroup {
+    return this.fb.group({
+      departmentId: [null, Validators.required],
+      classId: [{ value: null, disabled: false }, Validators.required],
+      sectionId: [{ value: null, disabled: false }, Validators.required],
+      courseId: [{ value: null, disabled: false }, Validators.required],
+      attendanceDate: [new Date().toISOString().split('T')[0], Validators.required],
+      periodNumber: [1, [Validators.required, Validators.min(1), Validators.max(8)]],
+      recordedBy: ['admin', Validators.required]
     });
+  }
+
+  // Form control getters
+  get departmentId(): FormControl {
+    return this.attendanceForm.get('departmentId') as FormControl;
+  }
+
+  get classId(): FormControl {
+    return this.attendanceForm.get('classId') as FormControl;
+  }
+
+  get sectionId(): FormControl {
+    return this.attendanceForm.get('sectionId') as FormControl;
+  }
+
+  get courseId(): FormControl {
+    return this.attendanceForm.get('courseId') as FormControl;
+  }
+
+  get attendanceDate(): FormControl {
+    return this.attendanceForm.get('attendanceDate') as FormControl;
+  }
+
+  get periodNumber(): FormControl {
+    return this.attendanceForm.get('periodNumber') as FormControl;
+  }
+
+  get recordedBy(): FormControl {
+    return this.attendanceForm.get('recordedBy') as FormControl;
+  }
+
+  setupFormListeners() {
+    console.log('Setting up form listeners...');
+
+    // Clear any existing subscriptions
+    this.formSubscriptions.forEach(sub => sub.unsubscribe());
+    this.formSubscriptions = [];
+
+    // Department listener with better filtering
+    const deptSubscription = this.departmentId.valueChanges.pipe(
+      distinctUntilChanged(),
+      debounceTime(100) // Add small delay to prevent rapid firing
+    ).subscribe(deptId => {
+      console.log('Department value changed:', deptId);
+      
+      // Only proceed if we have a valid number
+      if (deptId !== null && deptId !== undefined && deptId !== '' && !isNaN(Number(deptId))) {
+        const numericDeptId = Number(deptId);
+        console.log('Processing valid department ID:', numericDeptId);
+        
+        this.handleDepartmentChange(numericDeptId);
+      } else {
+        console.log('Invalid department ID, clearing dependent fields');
+        this.clearDependentFields();
+      }
+    });
+
+    // Class listener
+    const classSubscription = this.classId.valueChanges.pipe(
+      distinctUntilChanged(),
+      debounceTime(100)
+    ).subscribe(classId => {
+      console.log('Class value changed:', classId);
+      
+      if (classId !== null && classId !== undefined && classId !== '' && !isNaN(Number(classId))) {
+        const numericClassId = Number(classId);
+        console.log('Processing valid class ID:', numericClassId);
+        
+        this.handleClassChange(numericClassId);
+      } else {
+        console.log('Invalid class ID, clearing sections');
+        this.sections = [];
+        this.attendanceForm.patchValue({ sectionId: null }, { emitEvent: false });
+      }
+    });
+
+    this.formSubscriptions.push(deptSubscription, classSubscription);
+  }
+
+  private handleDepartmentChange(departmentId: number) {
+    // Reset dependent fields without triggering events
+    this.attendanceForm.patchValue({ 
+      classId: null, 
+      sectionId: null, 
+      courseId: null 
+    }, { emitEvent: false });
+    
+    this.classes = [];
+    this.sections = [];
+    
+    // Load dependent data
+    this.loadClasses(departmentId);
+    this.loadCourses(departmentId);
+  }
+
+  private handleClassChange(classId: number) {
+    this.attendanceForm.patchValue({ sectionId: null }, { emitEvent: false });
+    this.sections = [];
+    this.loadSections(classId);
+  }
+
+  private clearDependentFields() {
+    this.attendanceForm.patchValue({ 
+      classId: null, 
+      sectionId: null, 
+      courseId: null 
+    }, { emitEvent: false });
+    
+    this.classes = [];
+    this.sections = [];
+    this.courses = [];
   }
 
   loadDepartments() {
     this.loading = true;
-    this.departmentService.getAllDepartments().subscribe({
-      next: (depts) => { this.departments = depts; this.loading = false; },
-      error: () => { this.errorMessage = 'Failed to load departments'; this.loading = false; }
-    });
-  }
-
-  onDepartmentChange() {
-    this.classes = [];
-    this.sections = [];
-    this.students = [];
-    this.selectedClassId = null;
-    this.selectedSectionId = null;
-
-    if (!this.selectedDepartmentId) return;
-
-    this.loading = true;
-    this.classService.getClassesByDepartment(this.selectedDepartmentId).subscribe({
-      next: (classes) => { this.classes = classes; this.loading = false; },
-      error: () => { this.errorMessage = 'Failed to load classes'; this.loading = false; }
-    });
-  }
-
-  onClassChange() {
-    this.sections = [];
-    this.students = [];
-    this.selectedSectionId = null;
-
-    if (!this.selectedClassId) return;
-
-    this.loading = true;
-    this.sectionService.getSectionsByClassId(this.selectedClassId).subscribe({
-      next: (sections) => { this.sections = sections; this.loading = false; },
-      error: () => { this.errorMessage = 'Failed to load sections'; this.loading = false; }
-    });
-  }
-
-  onSectionChange() {
-    this.students = [];
-
-    if (!this.selectedSectionId) return;
-
-    this.loading = true;
-    this.studentService.getStudentsBySectionId(this.selectedSectionId).subscribe({
-      next: (students) => {
-        this.students = students.map(s => ({ ...s, status: undefined }));
+    this.attendanceService.getDepartments().subscribe({
+      next: (data) => {
+        console.log(data);
+        
+        this.departments = data;
         this.loading = false;
+        console.log('Departments loaded:', data.length);
       },
-      error: () => { this.errorMessage = 'Failed to load students'; this.loading = false; }
-    });
-  }
-
-  // FIXED: studentId is now number, not string
-  markAttendance(studentId: number, status: AttendanceStatus) {
-    this.students = this.students.map(student =>
-      student.id === studentId ? { ...student, status } : student
-    );
-  }
-
-  getMarkedStudentsCount(): number {
-    return this.students.filter(s => s.status !== undefined).length;
-  }
-
-  // FIXED: studentId is number
-  getAttendanceStatus(studentId: number): AttendanceStatus | undefined {
-    return this.students.find(s => s.id === studentId)?.status;
-  }
-
-  submitAttendance() {
-    if (!this.selectedCourseId || !this.selectedSectionId) {
-      this.errorMessage = 'Please select course and section';
-      return;
-    }
-
-    const studentsWithAttendance = this.students.filter(s => s.status !== undefined);
-
-    if (studentsWithAttendance.length === 0) {
-      this.errorMessage = 'Please mark attendance for at least one student';
-      return;
-    }
-
-    const attendanceRequests: AttendanceRequestDTO[] = studentsWithAttendance.map(student => ({
-      // FINAL FIX: studentId always number
-      studentId: student.id!,
-      courseId: this.selectedCourseId!,
-      sectionId: this.selectedSectionId!,
-      attendanceDate: this.selectedDate,
-      status: student.status as string,
-      remarks: '',
-      recordedBy: 'faculty_1',
-      periodNumber: this.periodNumber
-    }));
-
-    this.loading = true;
-    this.errorMessage = '';
-    this.successMessage = '';
-
-    this.attendanceService.createBulkAttendance(attendanceRequests).subscribe({
-      next: () => {
-        this.successMessage = `✔ Attendance saved for ${studentsWithAttendance.length} students!`;
-        this.loading = false;
-        setTimeout(() => this.resetForm(), 3000);
-      },
-      error: () => {
-        this.errorMessage = 'Error submitting attendance.';
+      error: (error) => {
+        console.error('Error loading departments:', error);
         this.loading = false;
       }
     });
   }
 
+  loadClasses(departmentId: number) {
+    if (!departmentId) {
+      console.error('Department ID is undefined');
+      return;
+    }
+    
+    this.loadingClasses = true;
+    this.attendanceService.getClassesByDepartment(departmentId).subscribe({
+      next: (data) => {
+        this.classes = data;
+        this.loadingClasses = false;
+        console.log('Classes loaded:', data.length);
+      },
+      error: (error) => {
+        console.error('Error loading classes:', error);
+        this.loadingClasses = false;
+      }
+    });
+  }
+
+  loadSections(classId: number) {
+    if (!classId) {
+      console.error('Class ID is undefined');
+      return;
+    }
+    
+    this.loadingSections = true;
+    this.attendanceService.getSectionsByClass(classId).subscribe({
+      next: (data) => {
+        this.sections = data;
+        this.loadingSections = false;
+        console.log('Sections loaded:', data.length);
+      },
+      error: (error) => {
+        console.error('Error loading sections:', error);
+        this.loadingSections = false;
+      }
+    });
+  }
+
+  loadCourses(departmentId: number) {
+    if (!departmentId) {
+      console.error('Department ID is undefined');
+      return;
+    }
+    
+    this.loadingCourses = true;
+    this.attendanceService.getCoursesByDepartment(departmentId).subscribe({
+      next: (data) => {
+        this.courses = data;
+        this.loadingCourses = false;
+        console.log('Courses loaded:', data.length);
+      },
+      error: (error) => {
+        console.error('Error loading courses:', error);
+        this.loadingCourses = false;
+      }
+    });
+  }
+  loadStudents() {
+    if (this.attendanceForm.valid) {
+      this.loadingStudents = true;
+      const filter: AttendanceFilter = this.attendanceForm.value;
+
+      this.attendanceService.getStudentsForAttendance(filter).subscribe({
+        next: (data) => {
+          this.students = data;
+          this.loadingStudents = false;
+          this.nextStep();
+        },
+        error: (error) => {
+          console.error('Error loading students:', error);
+          this.loadingStudents = false;
+          alert('Error loading students. Please try again.');
+        }
+      });
+    }
+  }
+
+  updateStudentStatus(student: StudentAttendance, status: string) {
+    student.status = status as AttendanceStatus;
+  }
+
+  updateStudentRemarks(student: StudentAttendance, remarks: string) {
+    student.remarks = remarks;
+  }
+
+  submitAttendance() {
+    if (this.attendanceForm.valid && this.students.length > 0) {
+      this.loading = true;
+      
+      const request: BulkAttendanceRequest = {
+        ...this.attendanceForm.value,
+        attendanceRecords: this.students
+      };
+
+      this.attendanceService.recordAttendance(request).subscribe({
+        next: (response) => {
+          this.loading = false;
+          alert('Attendance recorded successfully!');
+          this.nextStep();
+        },
+        error: (error) => {
+          console.error('Error recording attendance:', error);
+          this.loading = false;
+          alert('Error recording attendance. Please try again.');
+        }
+      });
+    }
+  }
+
+  nextStep() {
+    if (this.currentStep < this.totalSteps) {
+      this.currentStep++;
+    }
+  }
+
+  prevStep() {
+    if (this.currentStep > 1) {
+      this.currentStep--;
+    }
+  }
+
+  goToStep(step: number) {
+    if (step >= 1 && step <= this.totalSteps) {
+      this.currentStep = step;
+    }
+  }
+
   resetForm() {
-    this.students = this.students.map(s => ({ ...s, status: undefined }));
-    this.successMessage = '';
-    this.errorMessage = '';
+    this.attendanceForm.reset({
+      attendanceDate: new Date().toISOString().split('T')[0],
+      periodNumber: 1,
+      recordedBy: 'admin'
+    });
+    this.students = [];
+    this.currentStep = 1;
   }
 
-  canSubmitAttendance(): boolean {
-    return this.selectedCourseId !== null &&
-           this.selectedSectionId !== null &&
-           this.students.some(s => s.status !== undefined);
-  }
-
-  getAttendanceStats() {
-    return {
-      total: this.students.length,
-      present: this.students.filter(s => s.status === AttendanceStatus.PRESENT).length,
-      absent: this.students.filter(s => s.status === AttendanceStatus.ABSENT).length,
-      late: this.students.filter(s => s.status === AttendanceStatus.LATE).length
+  getStatusColor(status: AttendanceStatus): string {
+    const colors = {
+      [AttendanceStatus.PRESENT]: 'bg-green-100 text-green-800',
+      [AttendanceStatus.ABSENT]: 'bg-red-100 text-red-800',
+      [AttendanceStatus.LATE]: 'bg-yellow-100 text-yellow-800',
+      [AttendanceStatus.HALF_DAY]: 'bg-blue-100 text-blue-800',
+      [AttendanceStatus.EXCUSED]: 'bg-purple-100 text-purple-800'
     };
+    return colors[status] || 'bg-gray-100 text-gray-800';
+  }
+
+  get isFormValid(): boolean {
+    return this.attendanceForm.valid;
+  }
+
+  get canProceedToStudents(): boolean {
+    const { departmentId, classId, sectionId, courseId, attendanceDate, periodNumber } = this.attendanceForm.value;
+    return !!(departmentId && classId && sectionId && courseId && attendanceDate && periodNumber);
+  }
+
+  // Helper methods for template
+  getSelectedDepartmentName(): string {
+    const deptId = this.departmentId.value;
+    const department = this.departments.find(d => d.deptId === deptId);
+    return department ? department.deptName : '';
+  }
+
+  getSelectedClassName(): string {
+    const classId = this.classId.value;
+    const classObj = this.classes.find(c => c.id === classId);
+    return classObj ? classObj.className : '';
+  }
+
+  getSelectedSectionName(): string {
+    const sectionId = this.sectionId.value;
+    const section = this.sections.find(s => s.id === sectionId);
+    return section ? section.sectionName : '';
+  }
+
+  getSelectedCourseName(): string {
+    const courseId = this.courseId.value;
+    const course = this.courses.find(c => c.id === courseId);
+    return course ? course.courseName : '';
+  }
+
+  // Count methods for summary
+  getPresentCount(): number {
+    if (!this.students || this.students.length === 0) return 0;
+    return this.students.filter(s => s.status === AttendanceStatus.PRESENT).length;
+  }
+
+  getAbsentCount(): number {
+    if (!this.students || this.students.length === 0) return 0;
+    return this.students.filter(s => s.status === AttendanceStatus.ABSENT).length;
+  }
+
+  getTotalCount(): number {
+    return this.students ? this.students.length : 0;
   }
 }
