@@ -5,7 +5,7 @@ import { Department } from "./department.model";
 import { Section } from "./section.model";
 
 export interface Student {
-  id?: number;
+  id: number;
   studentId: string;
   name: string;
   email: string;
