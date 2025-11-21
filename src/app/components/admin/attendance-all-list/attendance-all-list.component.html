@@ -1,1 +1,239 @@
-<p>attendance-all-list works!</p>
+<!-- attendance-list.component.html -->
+<div class="attendance-container">
+  <!-- Filter Section -->
+  <div class="filter-section card">
+    <h3>Attendance Filters</h3>
+    <form [formGroup]="filterForm" class="filter-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="department">Department *</label>
+          <select id="department" formControlName="departmentId" 
+                  (change)="onDepartmentChange()" class="form-control">
+            <option value="">Select Department</option>
+            <option *ngFor="let dept of departments" [value]="dept.deptId">
+              {{ dept.deptName }} ({{ dept.deptCode }})
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="class">Class *</label>
+          <select id="class" formControlName="classId" 
+                  (change)="onClassChange()" class="form-control" [disabled]="!classes.length">
+            <option value="">Select Class</option>
+            <option *ngFor="let cls of classes" [value]="cls.id">
+              {{ cls.className }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="section">Section *</label>
+          <select id="section" formControlName="sectionId" class="form-control" [disabled]="!sections.length">
+            <option value="">Select Section</option>
+            <option *ngFor="let section of sections" [value]="section.id">
+              {{ section.sectionName }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="course">Course *</label>
+          <select id="course" formControlName="courseId" class="form-control" [disabled]="!courses.length">
+            <option value="">Select Course</option>
+            <option *ngFor="let course of courses" [value]="course.id">
+              {{ course.courseCode }} - {{ course.courseName }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="attendanceDate">Date *</label>
+          <input type="date" id="attendanceDate" formControlName="attendanceDate" class="form-control">
+        </div>
+
+        <div class="form-group">
+          <label for="periodNumber">Period Number *</label>
+          <input type="number" id="periodNumber" formControlName="periodNumber" 
+                 min="1" max="8" class="form-control">
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn-primary" 
+                (click)="loadAttendance()" 
+                [disabled]="!filterForm.valid || loading">
+          {{ loading ? 'Loading...' : 'View Students' }}
+        </button>
+
+        <button type="button" class="btn btn-success" 
+                (click)="startMarkingAttendance()" 
+                [disabled]="!canMarkAttendance() || isMarkingAttendance"
+                *ngIf="!isMarkingAttendance">
+          📝 Mark Attendance
+        </button>
+
+        <button type="button" class="btn btn-secondary" 
+                (click)="cancelMarking()" 
+                *ngIf="isMarkingAttendance">
+          ✖ Cancel
+        </button>
+
+        <button type="button" class="btn btn-export" 
+                (click)="exportToCSV()" 
+                [disabled]="students.length === 0">
+          📊 Export CSV
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Attendance Status Banner -->
+  <div class="status-banner" *ngIf="students.length > 0 && !isMarkingAttendance">
+    <div [class]="attendanceExists ? 'banner-recorded' : 'banner-pending'">
+      <strong>
+        {{ attendanceExists ? 
+          '✅ Attendance already recorded for this date' : 
+          '⏳ No attendance recorded for this date - Click "Mark Attendance" to record' 
+        }}
+      </strong>
+    </div>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="summary-section" *ngIf="students.length > 0">
+    <div class="summary-cards">
+      <div class="summary-card total">
+        <div class="card-icon">👥</div>
+        <div class="card-content">
+          <h3>{{ totalStudents }}</h3>
+          <p>Total Students</p>
+        </div>
+      </div>
+
+      <div class="summary-card present">
+        <div class="card-icon">✅</div>
+        <div class="card-content">
+          <h3>{{ presentCount }}</h3>
+          <p>Present</p>
+        </div>
+      </div>
+
+      <div class="summary-card absent">
+        <div class="card-icon">❌</div>
+        <div class="card-content">
+          <h3>{{ absentCount }}</h3>
+          <p>Absent</p>
+        </div>
+      </div>
+
+      <div class="summary-card late">
+        <div class="card-icon">⏰</div>
+        <div class="card-content">
+          <h3>{{ lateCount }}</h3>
+          <p>Late</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div class="loading-spinner" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Loading attendance data...</p>
+  </div>
+
+  <!-- Attendance Table - View Mode -->
+  <div class="attendance-table-section" *ngIf="!loading && students.length > 0 && !isMarkingAttendance">
+    <h3>Student Attendance for {{filterForm.get('attendanceDate')?.value}}</h3>
+    <div class="table-container">
+      <table class="attendance-table">
+        <thead>
+          <tr>
+            <th>Roll No</th>
+            <th>Student Name</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Remarks</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let student of students" [class]="getStatusClass(student.status)">
+            <td>{{ student.studentRoll }}</td>
+            <td>{{ student.studentName }}</td>
+            <td>{{ student.email }}</td>
+            <td>
+              <span class="status-badge" [class]="getStatusClass(student.status)">
+                {{ student.status || 'Not Recorded' }}
+              </span>
+            </td>
+            <td>{{ student.remarks || 'N/A' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Attendance Table - Edit Mode -->
+  <div class="attendance-table-section" *ngIf="!loading && students.length > 0 && isMarkingAttendance">
+    <div class="edit-header">
+      <h3>Mark Attendance for {{filterForm.get('attendanceDate')?.value}}</h3>
+      <button class="btn btn-success" (click)="saveAttendance()" [disabled]="loading">
+        💾 Save Attendance
+      </button>
+    </div>
+    
+    <div class="table-container">
+      <table class="attendance-table edit-mode">
+        <thead>
+          <tr>
+            <th>Roll No</th>
+            <th>Student Name</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Remarks</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let student of students" 
+              [class]="getStatusClass(editedStudents[student.studentId].status)">
+            <td>{{ student.studentRoll }}</td>
+            <td>{{ student.studentName }}</td>
+            <td>{{ student.email }}</td>
+            <td>
+              <select class="status-select" 
+                      [value]="editedStudents[student.studentId]?.status"
+                      (change)="onStatusChange(student.studentId, $any($event.target).value)">
+                <option *ngFor="let status of attendanceStatuses" [value]="status">
+                  {{ status }}
+                </option>
+              </select>
+            </td>
+            <td>
+              <input type="text" class="remarks-input" 
+                     [value]="editedStudents[student.studentId]?.remarks"
+                     (input)="onRemarksChange(student.studentId, $any($event.target).value)"
+                     placeholder="Enter remarks...">
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="!loading && students.length === 0 && filterForm.valid">
+    <div class="empty-icon">👥</div>
+    <h3>No Students Found</h3>
+    <p>No students available for the selected filters.</p>
+  </div>
+
+  <!-- Instruction State -->
+  <div class="instruction-state" *ngIf="!loading && students.length === 0 && !filterForm.valid">
+    <div class="instruction-icon">🎯</div>
+    <h3>Select Filters to View Students</h3>
+    <p>Please select department, class, section, course, and date to view students.</p>
+  </div>
+</div>

@@ -38,6 +38,7 @@ import { PaymentDashboardComponent } from './components/payment-dashboard/paymen
 import { ExamCreateComponent } from './components/admin/exam-create/exam-create.component';
 import { ExamListComponent } from './components/admin/exam-list/exam-list.component';
 import { ExamResultsComponent } from './components/admin/exam-results/exam-results.component';
+import { AttendanceAllListComponent } from './components/admin/attendance-all-list/attendance-all-list.component';
 
 const routes: Routes = [
 
@@ -89,6 +90,7 @@ const routes: Routes = [
 
 
       { path: 'attendances', component: AttendanceComponent },
+      {path: 'attendances/list', component:AttendanceAllListComponent},
 
       // { path: 'attendances', component: AttendanceListComponent },
       // { path: 'attendances/create', component: AttendanceFormComponent },

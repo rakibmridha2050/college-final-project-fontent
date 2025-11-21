@@ -51,7 +51,7 @@ import { PaymentDashboardComponent } from './components/payment-dashboard/paymen
 import { ExamListComponent } from './components/admin/exam-list/exam-list.component';
 import { ExamCreateComponent } from './components/admin/exam-create/exam-create.component';
 import { ExamResultsComponent } from './components/admin/exam-results/exam-results.component';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -112,7 +112,9 @@ import { CommonModule } from '@angular/common';
     ReactiveFormsModule,
     FormsModule
   ],
-  providers: [],
+  providers: [
+    DatePipe
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
