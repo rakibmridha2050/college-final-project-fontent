@@ -28,7 +28,8 @@ export enum AttendanceStatus {
   ABSENT = 'ABSENT',
   LATE = 'LATE',
   HALF_DAY = 'HALF_DAY',
-  EXCUSED = 'EXCUSED'
+  EXCUSED = 'EXCUSED',
+  NOT_TAKEN = 'NOT_TAKEN_YET'
 }
 
 export interface StudentAttendance {

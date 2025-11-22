@@ -26,4 +26,9 @@ export class ReportService {
     const url = `${this.baseUrl}/payslip/${paymentId}/${format}`;
     return this.http.get(url, { responseType: 'blob' });
   }
+
+    downloadStudentExamResultsPdf(studentId: number): Observable<Blob> {
+    const url = `${this.baseUrl}/results/${studentId}`;
+    return this.http.get(url, { responseType: 'blob' });
+  }
 }

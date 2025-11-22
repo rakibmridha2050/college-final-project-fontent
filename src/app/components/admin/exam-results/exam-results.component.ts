@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ExamResult, ExamResultSummary, BulkExamResultDTO } from 'src/app/model/exam.model';
 import { Student } from 'src/app/model/student.model';
 import { ExamServiceService } from 'src/app/service/exam-service.service';
+import { ReportService } from 'src/app/service/report.service';
 
 @Component({
   selector: 'app-exam-results',
@@ -25,7 +26,8 @@ export class ExamResultsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private examService: ExamServiceService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private reportService : ReportService
   ) {
     this.examId = +this.route.snapshot.paramMap.get('id')!;
     this.bulkForm = this.fb.group({
@@ -178,4 +180,21 @@ export class ExamResultsComponent implements OnInit {
       });
     }
   }
+
+  downloadExamResult(studentId: number) {
+  this.reportService.downloadStudentExamResultsPdf(studentId)
+    .subscribe({
+      next: (pdfBlob: Blob) => {
+        const fileURL = window.URL.createObjectURL(pdfBlob);
+        const a = document.createElement('a');
+        a.href = fileURL;
+        a.download = `exam_results_${studentId}.pdf`;
+        a.click();
+        window.URL.revokeObjectURL(fileURL);
+      },
+      error: () => {
+        alert('No exam results found for this student.');
+      }
+    });
+}
 }
