@@ -80,4 +80,9 @@ export class StudentService {
       body: courseIds
     });
   }
+
+  countStudents(): Observable<number> {
+  return this.http.get<number>(`${this.apiUrl}/count`);
+}
+
 }

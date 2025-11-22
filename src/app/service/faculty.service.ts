@@ -36,4 +36,9 @@ export class FacultyService {
   getFacultyByDepartment(departmentId: number): Observable<Faculty[]> {
     return this.http.get<Faculty[]>(`${this.apiUrl}/department/${departmentId}`);
   }
+
+  countFaculty(): Observable<number> {
+  return this.http.get<number>(`${this.apiUrl}/count`);
+}
+
 }

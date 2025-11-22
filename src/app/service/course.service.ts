@@ -64,4 +64,9 @@ export class CourseService {
   updateCourseFaculties(courseId: number, facultyIds: number[]): Observable<Course> {
     return this.http.put<Course>(`${this.apiUrl}/${courseId}/faculties`, facultyIds);
   }
+
+  countCourses(): Observable<number> {
+  return this.http.get<number>(`${this.apiUrl}/count`);
+}
+
 }
