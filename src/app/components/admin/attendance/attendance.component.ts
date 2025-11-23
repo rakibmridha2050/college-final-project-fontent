@@ -31,7 +31,14 @@ export class AttendanceComponent implements OnInit, OnDestroy {
   loadingStudents = false;
 
   // Status options
-  statusOptions = Object.values(AttendanceStatus);
+ statusOptions: { label: string, value: AttendanceStatus }[] = [
+  { label: 'Present', value: AttendanceStatus.PRESENT },
+  { label: 'Absent', value: AttendanceStatus.ABSENT },
+  { label: 'Late', value: AttendanceStatus.LATE },
+  { label: 'Half Day', value: AttendanceStatus.HALF_DAY },
+  { label: 'Excused', value: AttendanceStatus.EXCUSED },
+  { label: 'Not Taken', value: AttendanceStatus.NOT_TAKEN },
+];
 
   // Subscription management
   private formSubscriptions: Subscription[] = [];
@@ -45,6 +52,10 @@ export class AttendanceComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.loadDepartments();
+    console.log(this.statusOptions);
+    console.log(this.attendanceForm.value);
+    
+    
     // Delay form listeners setup until after initial data load
     setTimeout(() => {
       this.setupFormListeners();
@@ -275,9 +286,9 @@ export class AttendanceComponent implements OnInit, OnDestroy {
     }
   }
 
-  updateStudentStatus(student: StudentAttendance, status: string) {
-    student.status = status as AttendanceStatus;
-  }
+ updateStudentStatus(student: StudentAttendance, status: string) {
+  student.status = status as AttendanceStatus;
+}
 
   updateStudentRemarks(student: StudentAttendance, remarks: string) {
     student.remarks = remarks;
@@ -291,7 +302,8 @@ export class AttendanceComponent implements OnInit, OnDestroy {
         ...this.attendanceForm.value,
         attendanceRecords: this.students
       };
-
+        console.log("request"+request.attendanceRecords);
+        
       this.attendanceService.recordAttendance(request).subscribe({
         next: (response) => {
           this.loading = false;
@@ -341,7 +353,8 @@ export class AttendanceComponent implements OnInit, OnDestroy {
       [AttendanceStatus.ABSENT]: 'bg-red-100 text-red-800',
       [AttendanceStatus.LATE]: 'bg-yellow-100 text-yellow-800',
       [AttendanceStatus.HALF_DAY]: 'bg-blue-100 text-blue-800',
-      [AttendanceStatus.EXCUSED]: 'bg-purple-100 text-purple-800'
+      [AttendanceStatus.EXCUSED]: 'bg-purple-100 text-purple-800',
+      [AttendanceStatus.NOT_TAKEN]: 'bg-red-500 text-purple-800'
     };
     return colors[status] || 'bg-gray-100 text-gray-800';
   }

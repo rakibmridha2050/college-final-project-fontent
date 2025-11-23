@@ -334,10 +334,9 @@
                   {{ student.email }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <select [value]="student.status" (change)="updateStudentStatus(student, $any($event.target).value)"
-                    class="text-sm border border-gray-300 rounded-md px-3 py-1 focus:outline-none focus:ring-1 focus:ring-blue-500">
-                    <option *ngFor="let status of statusOptions" [value]="status">{{ status }}</option>
-                  </select>
+        <select [value]="student.status" (change)="updateStudentStatus(student, $any($event.target).value)">
+          <option *ngFor="let status of statusOptions" [value]="status.value">{{ status.label }}</option>
+        </select>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
                   <input type="text" [value]="student.remarks"
